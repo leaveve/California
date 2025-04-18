@@ -1,48 +1,65 @@
 <?php
 // Inclusion du fichier de connexion à la base de données
 require_once '../config/db_connect.php';
-// Méthode GET : on recherche la chambre demandée
+// Méthode GET : on recherche le client demandée
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 // Vérifier si l'ID est valide
 if ($id <= 0) {
-    header("Location: listChambres.php");
+    header("Location: listClients.php");
     exit;
 }
 $conn = openDatabaseConnection();
 // Méthode POST : Traitement du formulaire si soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $numero = $_POST['numero'];
-    $capacite = (int)$_POST['capacite'];
-
+    $nom = $_POST['nom'];
+    $prenom = $_POST['prenom'];
+    $email = $_POST['email'];
+    $telephone = $_POST['telephone'];
+    $nbPersonne = $_POST['nombre_personnes'];
+    
     // Validation des données
     $errors = [];
 
-    if (empty($numero)) {
-        $errors[] = "Le numéro de chambre est obligatoire.";
+    if (empty($nom)) {
+        $errors[] = "Le nom du client est obligatoire.";
     }
 
-    if ($capacite <= 0) {
-        $errors[] = "La capacité doit être un nombre positif.";
+    if (empty($prenom)) {
+        $errors[] = "Le prenom du client est obligatoire.";
+    }
+
+    if (empty($email)) {
+        $errors[] = "Le mail du client est obligatoire.";
+    }
+
+
+    if (empty($telephone)) {
+        $errors[] = "Le numéro de téléphone du client est obligatoire.";
+    }
+
+   
+    if ($nombre_personnes <= 0) {
+        $errors[] = "Le nombre de personne doit être un nombre positif.";
     }
 
     // Si pas d'erreurs, mettre à jour les données
     if (empty($errors)) {
-        $stmt = $conn->prepare("UPDATE chambres SET numero = ?, capacite = ? WHERE id = ?");
-        $stmt->execute([$numero, $capacite, $id]);
+        $stmt = $conn->prepare("UPDATE clients SET nom = ?, prenom = ? ,email = ?  , telephone = ? , nbPersonne = ? WHERE id = ?");
+        $stmt->execute([$nom, $prenom , $email , $telephone  , $nombre_personnes , $id]);
 
-        // Rediriger vers la liste des chambres
-        header("Location: listChambres.php?success=1");
+        // Rediriger vers la liste des clients
+        header("Location: listClients.php?success=1");
         exit;
     }
 } else {
-    // Méthode GET : Récupérer les données de la chambre
-    $stmt = $conn->prepare("SELECT * FROM chambres WHERE id = ?");
+    // Méthode GET : Récupérer les données du client
+    $stmt = $conn->prepare("SELECT * FROM clients WHERE id = ?");
     $stmt->execute([$id]);
     $chambre = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Si la chambre n'existe pas, rediriger
+    // Si le client n'existe pas, rediriger
     if (!$chambre) {
-        header("Location: listChambres.php");
+        header("Location: listClients.php");
         exit;
     }
 }
@@ -52,7 +69,7 @@ closeDatabaseConnection($conn);
 <html>
 
 <head>
-    <title>Modifier une Chambre</title>
+    <title>Modifier un Client</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/style.css">
@@ -66,7 +83,7 @@ closeDatabaseConnection($conn);
         <a href="../reservations/listReservations.php">Réservations</a>
     </div>
     <div class="container">
-        <h1>Modifier une Chambre</h1>
+        <h1>Modifier un client </h1>
 
         <?php if (isset($errors) && !empty($errors)): ?>
             <div class="error-message">
@@ -91,7 +108,7 @@ closeDatabaseConnection($conn);
 
             <div class="actions">
                 <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-                <a href="listChambres.php" class="btn btn-danger">Annuler</a>
+                <a href="listClients.php" class="btn btn-danger">Annuler</a>
             </div>
         </form>
     </div>

@@ -24,4 +24,10 @@ m2=1
 </panel_attributes><additional_attributes>10;20;120;20</additional_attributes></element><element><id>Relation</id><coordinates><x>320</x><y>220</y><w>160</w><h>50</h></coordinates><panel_attributes>lt=-
 m1=1
 m2=n
-</panel_attributes><additional_attributes>10;20;140;20</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes>10;20;140;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>430</x><y>440</y><w>210</w><h>100</h></coordinates><panel_attributes>employees
+--
+idemploye : int
+username: string
+password : string
+email : string
+role : string</panel_attributes><additional_attributes></additional_attributes></element></diagram>
