@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prenom = $_POST['prenom'];
     $email = $_POST['email'];
     $telephone = $_POST['telephone'];
-    $nbPersonne = $_POST['nombre_personnes'];
-    
+    $nombre_personnes = $_POST['nombre_personnes'];
+
     // Validation des données
     $errors = [];
 
@@ -37,15 +37,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Le numéro de téléphone du client est obligatoire.";
     }
 
-   
+
     if ($nombre_personnes <= 0) {
         $errors[] = "Le nombre de personne doit être un nombre positif.";
     }
 
     // Si pas d'erreurs, mettre à jour les données
     if (empty($errors)) {
-        $stmt = $conn->prepare("UPDATE clients SET nom = ?, prenom = ? ,email = ?  , telephone = ? , nbPersonne = ? WHERE id = ?");
-        $stmt->execute([$nom, $prenom , $email , $telephone  , $nombre_personnes , $id]);
+        $stmt = $conn->prepare("UPDATE clients SET nom = ?, prenom = ? ,email = ?  , telephone = ? , nombre_personnes = ? WHERE id = ?");
+        $stmt->execute([$nom, $prenom, $email, $telephone, $nombre_personnes, $id]);
 
         // Rediriger vers la liste des clients
         header("Location: listClients.php?success=1");
@@ -55,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Méthode GET : Récupérer les données du client
     $stmt = $conn->prepare("SELECT * FROM clients WHERE id = ?");
     $stmt->execute([$id]);
-    $chambre = $stmt->fetch(PDO::FETCH_ASSOC);
+    $client = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Si le client n'existe pas, rediriger
-    if (!$chambre) {
+    if (!$client) {
         header("Location: listClients.php");
         exit;
     }
@@ -95,16 +95,35 @@ closeDatabaseConnection($conn);
 
         <form method="post">
             <div class="form-group">
-                <label for="numero">Numéro de Chambre:</label>
-                <input type="text" id="numero" name="numero"
-                    value="<?= htmlspecialchars($chambre['numero']) ?>" required>
+                <label for="nom">Nom:</label>
+                <input type="text" id="nom" name="nom"
+                    value="<?= htmlspecialchars($client['nom']) ?>" required>
             </div>
 
             <div class="form-group">
-                <label for="capacite">Capacité (nombre de personnes):</label>
-                <input type="number" id="capacite" name="capacite"
-                    value="<?= $chambre['capacite'] ?>" min="1" required>
+                <label for="prenom">Prenom:</label>
+                <input type="text" id="prenom" name="prenom"
+                    value="<?= $client['prenom'] ?>" required>
             </div>
+
+            <div class="form-group">
+                <label for="telephone">Téléphone :</label>
+                <input type="text" id="telephone" name="telephone"
+                    value="<?= htmlspecialchars($client['telephone']) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email"
+                    value="<?= htmlspecialchars($client['email']) ?>">
+            </div>
+
+            <div class="form-group">
+                <label for="nombre_personnes">Nombre de personnes :</label>
+                <input type="number" id="nombre_personnes" name="nombre_personnes"
+                    value="<?= $client['nombre_personnes'] ?>" min="1" required>
+            </div>
+
 
             <div class="actions">
                 <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
