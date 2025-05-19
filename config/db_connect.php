@@ -1,3 +1,4 @@
+
 <?php
     //Fonction de connexion à la base de données qui retourne le handle
 

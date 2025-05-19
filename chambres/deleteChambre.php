@@ -1,3 +1,4 @@
+
 <?php
 // Inclusion du fichier de connexion à la base de données
 require_once '../config/db_connect.php';
